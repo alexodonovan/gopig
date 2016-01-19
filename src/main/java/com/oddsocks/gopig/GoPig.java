@@ -12,7 +12,6 @@ public class GoPig {
 			new GopigoCommanderTest();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
-			System.out.print(e);
 		}
 	}
 }
