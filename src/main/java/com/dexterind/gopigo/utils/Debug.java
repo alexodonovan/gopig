@@ -105,7 +105,7 @@ public class Debug {
 		try {
 			String configProp = System.getProperty("config") == null ? "default" : System.getProperty("config");
 			String fileName = configProp + ".properties";
-			input = this.getClass().getResourceAsStream(fileName);
+			input = this.getClass().getResourceAsStream(File.separator + fileName);
 			prop.load(input);
 
 			debug = Boolean.valueOf(prop.getProperty("debug"));
