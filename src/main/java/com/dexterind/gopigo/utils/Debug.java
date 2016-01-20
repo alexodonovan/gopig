@@ -41,142 +41,148 @@ import java.util.logging.SimpleFormatter;
 
 /**
  * If the debug mode is ON this class will write the given log into a log file.
- * It's possible to define the log dir. and the log filename from the configuration file.
+ * It's possible to define the log dir. and the log filename from the
+ * configuration file.
+ * 
  * @author marcello
- *
+ * 
  */
 public class Debug {
-  /**
-   * The logger object.
-   */
-  private Logger logger;
-  /**
-   * The log file handler.
-   */
-  private FileHandler fh;
+	/**
+	 * The logger object.
+	 */
+	private Logger logger;
+	/**
+	 * The log file handler.
+	 */
+	private FileHandler fh;
 
-  /**
-   * The "finest" log level.
-   */
-  public static final int FINEST = 1;
-  /**
-   * The "finer" log level.
-   */
-  public static final int FINER = 2;
-  /**
-   * The "fine" log level.
-   */
-  public static final int FINE = 3;
-  /**
-   * The "config" log level.
-   */
-  public static final int CONFIG = 4;
-  /**
-   * The "info" log level.
-   */
-  public static final int INFO = 5;
-  /**
-   * The "warning" log level.
-   */
-  public static final int WARNING = 6;
-  /**
-   * The "severe" log level.
-   */
-  public static final int SEVERE = 7;
+	/**
+	 * The "finest" log level.
+	 */
+	public static final int FINEST = 1;
+	/**
+	 * The "finer" log level.
+	 */
+	public static final int FINER = 2;
+	/**
+	 * The "fine" log level.
+	 */
+	public static final int FINE = 3;
+	/**
+	 * The "config" log level.
+	 */
+	public static final int CONFIG = 4;
+	/**
+	 * The "info" log level.
+	 */
+	public static final int INFO = 5;
+	/**
+	 * The "warning" log level.
+	 */
+	public static final int WARNING = 6;
+	/**
+	 * The "severe" log level.
+	 */
+	public static final int SEVERE = 7;
 
-  /**
-   * The flag to set to enable or disable the debug.
-   */
-  private Boolean debug = false;
-  /**
-   * The default directory where the log will be created.
-   */
-  private String logDir = "/var/log/gopigo";
-  /**
-   * The default filename for the log.
-   */
-  private String logFile = "all.log";
+	/**
+	 * The flag to set to enable or disable the debug.
+	 */
+	private Boolean debug = false;
+	/**
+	 * The default directory where the log will be created.
+	 */
+	private String logDir = "/var/log/gopigo";
+	/**
+	 * The default filename for the log.
+	 */
+	private String logFile = "all.log";
 
-  public Debug(String target) {
-    Properties prop = new Properties();
-    InputStream input = null;
+	public Debug(String target) {
+		Properties prop = new Properties();
+		InputStream input = null;
 
-    try {
-      String configProp = System.getProperty("config") == null ? "default" : System.getProperty("config");
-      input = new FileInputStream(System.getProperty("user.dir") + "/../config/" + configProp + ".properties");
-      prop.load(input);
+		try {
+			String configProp = System.getProperty("config") == null ? "default" : System.getProperty("config");
+			input = new FileInputStream(System.getProperty("user.dir") + configProp + ".properties");
+			prop.load(input);
 
-      debug = Boolean.valueOf(prop.getProperty("debug"));
-      logDir = prop.getProperty("logDir");
-      logFile = prop.getProperty("logFile");
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (input != null) {
-        try {
-          input.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
+			debug = Boolean.valueOf(prop.getProperty("debug"));
+			logDir = prop.getProperty("logDir");
+			logFile = prop.getProperty("logFile");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
-    logger = Logger.getLogger(target);
-    try {
-      File file = new File(logDir);
-      if (!file.exists()) {
-        if (file.mkdir()) {
-          System.out.println("Log Directory is created!");
-        } else {
-          System.out.println("Failed to create log directory!");
-        }
-      }
-      fh = new FileHandler(logDir + "/" + logFile, true);
-      logger.addHandler(fh);
-      logger.setUseParentHandlers(false);
-      // this one disables the console log
-      SimpleFormatter formatter = new SimpleFormatter();
-      fh.setFormatter(formatter);
-    } catch (SecurityException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
+		logger = Logger.getLogger(target);
+		try {
+			File file = new File(logDir);
+			if (!file.exists()) {
+				if (file.mkdir()) {
+					System.out.println("Log Directory is created!");
+				} else {
+					System.out.println("Failed to create log directory!");
+				}
+			}
+			fh = new FileHandler(logDir + "/" + logFile, true);
+			logger.addHandler(fh);
+			logger.setUseParentHandlers(false);
+			// this one disables the console log
+			SimpleFormatter formatter = new SimpleFormatter();
+			fh.setFormatter(formatter);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-  /**
-   * Writes the log message with the given level. If the debug is disabled then returns immediately.
-   * @param level The level of the log to use.
-   * @param message The message of the log to write.
-   */
-  public void log(int level, String message) {
-    if (!debug) {
-      return;
-    }
+	/**
+	 * Writes the log message with the given level. If the debug is disabled
+	 * then returns immediately.
+	 * 
+	 * @param level
+	 *            The level of the log to use.
+	 * @param message
+	 *            The message of the log to write.
+	 */
+	public void log(int level, String message) {
+		if (!debug) {
+			return;
+		}
 
-    switch (level) {
-      default:
-      case Debug.FINEST:
-        logger.finest(message);
-        break;
-      case Debug.FINER:
-        logger.finer(message);
-        break;
-      case Debug.FINE:
-        logger.fine(message);
-        break;
-      case Debug.CONFIG:
-        logger.config(message);
-        break;
-      case Debug.INFO:
-        logger.info(message);
-        break;
-      case Debug.WARNING:
-        logger.warning(message);
-        break;
-      case Debug.SEVERE:
-        logger.severe(message);
-        break;
-    }
-  }
+		switch (level) {
+		default:
+		case Debug.FINEST:
+			logger.finest(message);
+			break;
+		case Debug.FINER:
+			logger.finer(message);
+			break;
+		case Debug.FINE:
+			logger.fine(message);
+			break;
+		case Debug.CONFIG:
+			logger.config(message);
+			break;
+		case Debug.INFO:
+			logger.info(message);
+			break;
+		case Debug.WARNING:
+			logger.warning(message);
+			break;
+		case Debug.SEVERE:
+			logger.severe(message);
+			break;
+		}
+	}
 }

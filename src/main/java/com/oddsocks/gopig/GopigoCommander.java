@@ -40,13 +40,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-public class GopigoCommanderTest implements GopigoListener {
+public class GopigoCommander implements GopigoListener {
   private static int ultrasonicPin = 15;
   //private static int irReceiverPin = 8;
 
   private static Gopigo gopigo = null;
 
-  public GopigoCommanderTest() throws IOException, InterruptedException {
+  public GopigoCommander() throws IOException, InterruptedException {
     System.out.println("-----------------------------------------------------");
     System.out.println("Welcome to the GoPiGo test application");
     System.out.println("When asked, insert a command to test your GoPiGo");

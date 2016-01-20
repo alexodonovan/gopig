@@ -9,7 +9,7 @@ import java.io.IOException;
 public class GoPig {
 	public static void main(String[] args) {
 		try {
-			new GopigoCommanderTest();
+			new GopigoCommander();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
