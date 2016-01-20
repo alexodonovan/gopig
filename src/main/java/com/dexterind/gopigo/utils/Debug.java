@@ -30,9 +30,8 @@
  */
 package com.dexterind.gopigo.utils;
 
-import java.io.IOException;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.FileHandler;
@@ -105,7 +104,8 @@ public class Debug {
 
 		try {
 			String configProp = System.getProperty("config") == null ? "default" : System.getProperty("config");
-			input = new FileInputStream(System.getProperty("user.dir") +File.separator+ configProp + ".properties");
+			String fileName = configProp + ".properties";
+			input = this.getClass().getResourceAsStream(fileName);
 			prop.load(input);
 
 			debug = Boolean.valueOf(prop.getProperty("debug"));
