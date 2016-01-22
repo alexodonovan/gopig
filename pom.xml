@@ -7,8 +7,8 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>gopig</name>
 	<url>http://maven.apache.org</url>
-  
-  
+
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -16,10 +16,11 @@
 		<pi4j.version>1.0</pi4j.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.10.19</mockito.version>
+		<hamcrest.version>1.3</hamcrest.version>
 		<slf4j.version>1.7.13</slf4j.version>
 		<logback.version>1.1.3</logback.version>
 	</properties>
-	
+
 	<dependencies>
 
 		<dependency>
@@ -34,32 +35,40 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 	</dependencies>
-  
+
 	<build>
 		<plugins>
-      
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -69,7 +78,7 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-        
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -82,10 +91,10 @@
 							<mainClass>com.oddsocks.gopig.GoPig</mainClass>
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>
-					</archive>                       
+					</archive>
 				</configuration>
 			</plugin>
-		
+
 			<!-- Includes the runtime dependencies -->
 			<plugin>
 				<groupId>org.dstovall</groupId>
@@ -99,13 +108,13 @@
 					</execution>
 				</executions>
 			</plugin>
-		
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.7</version>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
@@ -115,7 +124,7 @@
 				</configuration>
 			</plugin>
 
-      	
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -129,11 +138,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
-      
+
 	</build>
-  
+
 	<!-- One-Jar is in the googlecode repository -->
 	<pluginRepositories>
 		<pluginRepository>
@@ -141,6 +150,6 @@
 			<url>http://onejar-maven-plugin.googlecode.com/svn/mavenrepo</url>
 		</pluginRepository>
 	</pluginRepositories>
-  
-  
+
+
 </project>
