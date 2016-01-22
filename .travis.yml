@@ -1,1 +1,7 @@
 language: java
+notificaitions: 
+	email:
+		recipients:
+			- email.alexodonovan@gmail.com
+		on_success: always
+		on_failure: always
