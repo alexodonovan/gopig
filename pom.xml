@@ -15,7 +15,7 @@
 		<java.version>1.7</java.version>
 		<pi4j.version>1.0</pi4j.version>
 		<junit.version>4.12</junit.version>
-		<mockito.version>1.0.19</mockito.version>
+		<mockito.version>1.10.19</mockito.version>
 	</properties>
 	
 	
