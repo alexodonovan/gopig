@@ -1,102 +1,126 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.oddsocks.gopig</groupId>
-  <artifactId>gopig</artifactId>
-  <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>gopig</name>
-  <url>http://maven.apache.org</url>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.oddsocks.gopig</groupId>
+	<artifactId>gopig</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>gopig</name>
+	<url>http://maven.apache.org</url>
   
   
 	<properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	    <java.version>1.7</java.version>
-	    <pi4j.version>1.0</pi4j.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.7</java.version>
+		<pi4j.version>1.0</pi4j.version>
 	</properties>
 	
 	
 	<dependencies>
-	    <dependency>
-		    <groupId>com.pi4j</groupId>
-		    <artifactId>pi4j-core</artifactId>
-		    <version>${pi4j.version}</version>
+		<dependency>
+			<groupId>com.pi4j</groupId>
+			<artifactId>pi4j-core</artifactId>
+			<version>${pi4j.version}</version>
 		</dependency>
 	</dependencies>
   
-  <build>
-      <plugins>
+	<build>
+		<plugins>
       
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.3</version>
-          <configuration>
-            <source>${java.version}</source>
-            <target>${java.version}</target>
-          </configuration>
-        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
         
-        <plugin>
-		    <groupId>org.apache.maven.plugins</groupId>
-		    <artifactId>maven-dependency-plugin</artifactId>
-		    <version>2.10</version>
-		    <executions>
-		        <execution>
-		            <id>copy-dependencies</id>
-		            <phase>prepare-package</phase>
-		            <goals>
-		                <goal>copy-dependencies</goal>
-		            </goals>
-		            <configuration>
-		                <outputDirectory>${project.build.directory}/lib</outputDirectory>
-		            </configuration>
-		        </execution>
-		    </executions>
-		</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		
-	    <plugin>
-		    <groupId>org.apache.maven.plugins</groupId>
-		    <artifactId>maven-jar-plugin</artifactId>
-		    <version>2.6</version>
-		    <configuration>
-			    <!-- <finalName>gopig</finalName> -->
-		        <archive>
-		          <manifest>
-		          	<addClasspath>true</addClasspath>
-		            <mainClass>com.oddsocks.gopig.GoPig</mainClass>
-		          	<classpathPrefix>lib/</classpathPrefix>
-		          </manifest>
-		        </archive>                       
-		    </configuration>
-		</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<!-- <finalName>gopig</finalName> -->
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.oddsocks.gopig.GoPig</mainClass>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>                       
+				</configuration>
+			</plugin>
 		
-		<!-- Includes the runtime dependencies -->
-		<plugin>
-			<groupId>org.dstovall</groupId>
-			<artifactId>onejar-maven-plugin</artifactId>
-			<version>1.4.4</version>
-			<executions>
-			  <execution>
-				<goals>
-					<goal>one-jar</goal>
-				</goals>
-			  </execution>
-			</executions>
-		</plugin>
+			<!-- Includes the runtime dependencies -->
+			<plugin>
+				<groupId>org.dstovall</groupId>
+				<artifactId>onejar-maven-plugin</artifactId>
+				<version>1.4.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>one-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		
-		<plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-resources-plugin</artifactId>
-	        <version>2.7</version>
-      	</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.1.0</version>
+				<configuration>
+					<repoToken>aKlcjFfGMFY9FnCvXtSqNiTfDEkJL0iE0</repoToken>
+				</configuration>
+			</plugin>
+
+      	
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.5.201505241946</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		    
-      </plugins>
+		</plugins>
       
-  </build>
+	</build>
   
-  	<!-- One-Jar is in the googlecode repository -->
+	<!-- One-Jar is in the googlecode repository -->
 	<pluginRepositories>
 		<pluginRepository>
 			<id>onejar-maven-plugin.googlecode.com</id>
