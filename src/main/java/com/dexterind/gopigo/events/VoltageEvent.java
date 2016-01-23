@@ -33,25 +33,31 @@ package com.dexterind.gopigo.events;
 import java.util.EventObject;
 
 /**
- * A voltage event is fired by the voltage check task and it contains the current
- * voltage value in volts.
+ * A voltage event is fired by the voltage check task and it contains the
+ * current voltage value in volts.
+ * 
  * @author marcello
- *
+ * 
  */
 public class VoltageEvent extends EventObject {
 
-  private static final long serialVersionUID = 5992043874332938157L;
-  /**
-   * The value of the voltage.
-   */
-  public double value;
+	private static final long serialVersionUID = 5992043874332938157L;
+	/**
+	 * The value of the voltage.
+	 */
+	private double value;
 
-  public VoltageEvent(Object source) {
-    super(source);
-  }
+	public VoltageEvent(Object source) {
+		super(source);
+	}
 
-  public VoltageEvent(Object source, double value) {
-      this(source);
-      this.value = value;
-   }
+	public VoltageEvent(Object source, double value) {
+		this(source);
+		this.value = value;
+	}
+
+	public double getValue() {
+		return value;
+	}
+
 }

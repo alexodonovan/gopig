@@ -34,24 +34,30 @@ import java.util.EventObject;
 
 /**
  * A status event is fired at every change to the GoPiGo status.
+ * 
  * @author marcello
- *
+ * 
  */
 public class StatusEvent extends EventObject {
 
-  private static final long serialVersionUID = -2236533038040111378L;
-  /**
-   * The status of the event. All the status are referenced into the
-   *  Statuses static class.
-   */
-  public int status;
+	private static final long serialVersionUID = -2236533038040111378L;
+	/**
+	 * The status of the event. All the status are referenced into the Statuses
+	 * static class.
+	 */
+	private int status;
 
-  public StatusEvent(Object source) {
-    super(source);
-  }
+	public StatusEvent(Object source) {
+		super(source);
+	}
 
-  public StatusEvent(Object source, int status) {
-      this(source);
-      this.status = status;
-   }
+	public StatusEvent(Object source, int status) {
+		this(source);
+		this.status = status;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
 }

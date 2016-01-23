@@ -169,15 +169,27 @@ public class MotionTest {
 		verify(board).writeI2c(eq(Commands.TRIM_TEST), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
 	}
 
+	// TODO find out what out the trim read works on the i2c. How does reading
+	// from work? Where are the docs?
 	@Test
 	public void testTrimRead() throws Exception {
-		byte[] val1 = { (byte) 0};
-		byte[] val2 = { (byte) 50};
+		byte[] val1 = { (byte) 0 };
+		byte[] val2 = { (byte) 50 };
 		when(board.readI2c(1)).thenReturn(val1, val2);
 		double result = sut.trimRead();
 
 		assertThat(result, equalTo(50.0));
 		verify(board).writeI2c(eq(Commands.TRIM_READ), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
 		verify(board).sleep(eq(80));
+	}
+
+	// TODO find out what out the trim read works on the i2c. How does reading
+	// from work? Where are the docs?
+	@Test
+	public void trimRead_should_return_minus_3_if_no_read() throws Exception {
+		byte[] val1 = { (byte) 0 };
+		byte[] val2 = { (byte) 255 };
+		when(board.readI2c(1)).thenReturn(val1, val2);
+		assertThat(sut.trimRead(), equalTo((double) -3));
 	}
 }

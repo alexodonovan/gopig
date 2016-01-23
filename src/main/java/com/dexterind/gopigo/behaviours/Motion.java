@@ -252,15 +252,13 @@ public class Motion {
 		int val1 = (int) b1[0] & 0xFF;
 		int val2 = (int) b2[0] & 0xFF;
 
+		double result = Statuses.ERROR;
 		if (val1 != -1 && val2 != -1) {
 			int v = val1 * 256 + val2;
-			if (v == 255) {
-				return -3;
-			}
-			return v;
-		} else {
-			return Statuses.ERROR;
+			if (v == 255) v = -3;
+			result = v;
 		}
+		return result;
 	}
 
 	/**

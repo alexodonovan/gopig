@@ -37,61 +37,64 @@ import com.dexterind.gopigo.utils.Debug;
 
 /**
  * Handles the motor functions.
+ * 
  * @author marcello
- *
+ * 
  */
 public class Motor {
-  /**
-   * The left motor command.
-   */
-  private static final int LEFT_COMMAND = Commands.M2;
-  /**
-   * The right motor command.
-   */
-  private static final int RIGHT_COMMAND = Commands.M1;
-  /**
-   * The forward command.
-   */
-  public static final int FORWARD = 1;
-  /**
-   * The backward command.
-   */
-  public static final int BACKWARD = 0;
-  /**
-   * The left motor ID.
-   */
-  public static final int LEFT = 1;
-  /**
-   * The right motor ID.
-   */
-  public static final int RIGHT = 0;
-  /**
-   * The main object which handles the methods to get access to the resources
-   * connected to the board.
-   */
-  private static Board board;
-  /**
-   * The current command.
-   */
-  private int command = Commands.UNUSED;
-  /**
-   * The debug object.
-   */
-  private Debug debug;
+	/**
+	 * The left motor command.
+	 */
+	private static final int LEFT_COMMAND = Commands.M2;
+	/**
+	 * The right motor command.
+	 */
+	private static final int RIGHT_COMMAND = Commands.M1;
+	/**
+	 * The forward command.
+	 */
+	public static final int FORWARD = 1;
+	/**
+	 * The backward command.
+	 */
+	public static final int BACKWARD = 0;
+	/**
+	 * The left motor ID.
+	 */
+	public static final int LEFT = 1;
+	/**
+	 * The right motor ID.
+	 */
+	public static final int RIGHT = 0;
+	/**
+	 * The main object which handles the methods to get access to the resources
+	 * connected to the board.
+	 */
+	private Board board;
+	/**
+	 * The current command.
+	 */
+	private int command = Commands.UNUSED;
+	/**
+	 * The debug object.
+	 */
+	private Debug debug;
 
-  public Motor(int id) throws IOException, InterruptedException {
-    command = id == LEFT ? LEFT_COMMAND : RIGHT_COMMAND;
-    board = Board.getInstance();
-  }
+	public Motor(int id, Board board) throws IOException, InterruptedException {
+		command = id == LEFT ? LEFT_COMMAND : RIGHT_COMMAND;
+		this.board = board;
+	}
 
-  /**
-   * Moves the motor in the direction at the given speed.
-   * @param direction The direction of the movement.
-   * @param speed
-   * @return A status code.
-   * @throws IOException
-   */
-  public int move(int direction, int speed) throws IOException {
-    return board.writeI2c(command, direction, speed, Commands.UNUSED);
-  }
+	/**
+	 * Moves the motor in the direction at the given speed.
+	 * 
+	 * @param direction
+	 *            The direction of the movement.
+	 * @param speed
+	 * @return A status code.
+	 * @throws IOException
+	 */
+	public int move(int direction, int speed) throws IOException {
+		return board.writeI2c(command, direction, speed, Commands.UNUSED);
+	}
 }

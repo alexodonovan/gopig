@@ -143,8 +143,8 @@ public final class Gopigo {
 			irReceiverSensor = IRReceiverSensor.getInstance();
 			ledLeft = new Led(Led.LEFT);
 			ledRight = new Led(Led.RIGHT);
-			motorLeft = new Motor(Motor.LEFT);
-			motorRight = new Motor(Motor.RIGHT);
+			motorLeft = new Motor(Motor.LEFT, board);
+			motorRight = new Motor(Motor.RIGHT, board);
 			motion = new Motion(Board.getInstance());
 		} catch (IOException e) {
 			e.printStackTrace();
