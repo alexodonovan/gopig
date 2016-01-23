@@ -2,6 +2,7 @@ package com.dexterind.gopigo.behaviours;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.*;
@@ -166,5 +167,17 @@ public class MotionTest {
 
 		sut.trimTest(-150);
 		verify(board).writeI2c(eq(Commands.TRIM_TEST), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
+	}
+
+	@Test
+	public void testTrimRead() throws Exception {
+		byte[] val1 = { (byte) 0};
+		byte[] val2 = { (byte) 50};
+		when(board.readI2c(1)).thenReturn(val1, val2);
+		double result = sut.trimRead();
+
+		assertThat(result, equalTo(50.0));
+		verify(board).writeI2c(eq(Commands.TRIM_READ), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
+		verify(board).sleep(eq(80));
 	}
 }
