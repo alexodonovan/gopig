@@ -113,4 +113,58 @@ public class MotionTest {
 		verify(board).writeI2c(eq(Commands.DIS_COM_TIMEOUT), eq(Commands.UNUSED), eq(Commands.UNUSED), eq(Commands.UNUSED));
 	}
 
+	@Test
+	public void testSetLeftSpeed() throws Exception {
+		sut.setLeftSpeed(50);
+		verify(board).writeI2c(eq(Commands.SET_LEFT_SPEED), eq(50), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.setLeftSpeed(-100);
+		verify(board).writeI2c(eq(Commands.SET_LEFT_SPEED), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.setLeftSpeed(300);
+		verify(board).writeI2c(eq(Commands.SET_LEFT_SPEED), eq(255), eq(Commands.UNUSED), eq(Commands.UNUSED));
+	}
+
+	@Test
+	public void testSetRightSpeed() throws Exception {
+		sut.setRightSpeed(50);
+		verify(board).writeI2c(eq(Commands.SET_RIGHT_SPEED), eq(50), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.setRightSpeed(-100);
+		verify(board).writeI2c(eq(Commands.SET_RIGHT_SPEED), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.setRightSpeed(300);
+		verify(board).writeI2c(eq(Commands.SET_RIGHT_SPEED), eq(255), eq(Commands.UNUSED), eq(Commands.UNUSED));
+	}
+
+	@Test
+	public void testSetSpeed() throws Exception {
+		sut.setSpeed(50);
+		verify(board).writeI2c(eq(Commands.SET_RIGHT_SPEED), eq(50), eq(Commands.UNUSED), eq(Commands.UNUSED));
+		verify(board).writeI2c(eq(Commands.SET_LEFT_SPEED), eq(50), eq(Commands.UNUSED), eq(Commands.UNUSED));
+	}
+
+	@Test
+	public void testTrimWrite() throws Exception {
+		sut.trimWrite(50);
+		verify(board).writeI2c(eq(Commands.TRIM_WRITE), eq(150), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.trimWrite(150);
+		verify(board).writeI2c(eq(Commands.TRIM_WRITE), eq(200), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.trimWrite(-150);
+		verify(board).writeI2c(eq(Commands.TRIM_WRITE), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
+	}
+
+	@Test
+	public void testTrimTest() throws Exception {
+		sut.trimTest(50);
+		verify(board).writeI2c(eq(Commands.TRIM_TEST), eq(150), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.trimTest(150);
+		verify(board).writeI2c(eq(Commands.TRIM_TEST), eq(200), eq(Commands.UNUSED), eq(Commands.UNUSED));
+
+		sut.trimTest(-150);
+		verify(board).writeI2c(eq(Commands.TRIM_TEST), eq(0), eq(Commands.UNUSED), eq(Commands.UNUSED));
+	}
 }

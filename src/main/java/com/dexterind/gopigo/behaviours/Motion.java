@@ -43,6 +43,16 @@ import com.dexterind.gopigo.utils.*;
  * 
  */
 public class Motion {
+	private static final int TRIM_OFFSET = 100;
+
+	private static final int MIN_TRIM = -100;
+
+	private static final int MAX_TRIM = 100;
+
+	private static final int MIN_SPEED = 0;
+
+	private static final int MAX_SPEED = 255;
+
 	/**
 	 * The main object which handles the methods to get access to the resources
 	 * connected to the board.
@@ -179,13 +189,11 @@ public class Motion {
 	 * @throws IOException
 	 */
 	public int setLeftSpeed(int speed) throws IOException {
-		if (speed > 255) {
-			speed = 255;
-		} else if (speed < 0) {
-			speed = 0;
-		}
+		return board.writeI2c(Commands.SET_LEFT_SPEED, trimSpeed(speed), Commands.UNUSED, Commands.UNUSED);
+	}
 
-		return board.writeI2c(Commands.SET_LEFT_SPEED, speed, Commands.UNUSED, Commands.UNUSED);
+	private int trimSpeed(int speed) {
+		return trimRange(speed, MIN_SPEED, MAX_SPEED);
 	}
 
 	/**
@@ -197,13 +205,7 @@ public class Motion {
 	 * @throws IOException
 	 */
 	public int setRightSpeed(int speed) throws IOException {
-		if (speed > 255) {
-			speed = 255;
-		} else if (speed < 0) {
-			speed = 0;
-		}
-
-		return board.writeI2c(Commands.SET_RIGHT_SPEED, speed, Commands.UNUSED, Commands.UNUSED);
+		return board.writeI2c(Commands.SET_RIGHT_SPEED, trimSpeed(speed), Commands.UNUSED, Commands.UNUSED);
 	}
 
 	/**
@@ -215,11 +217,7 @@ public class Motion {
 	 * @throws IOException
 	 */
 	public int setSpeed(int speed) throws IOException {
-		if (speed > 255) {
-			speed = 255;
-		} else if (speed < 0) {
-			speed = 0;
-		}
+		speed = trimSpeed(speed);
 
 		setLeftSpeed(speed);
 		setRightSpeed(speed);
@@ -236,14 +234,7 @@ public class Motion {
 	 * @throws IOException
 	 */
 	public double trimTest(int value) throws IOException {
-		if (value > 100) {
-			value = 100;
-		} else if (value < -100) {
-			value = -100;
-		}
-		value += 100;
-
-		return board.writeI2c(Commands.TRIM_TEST, value, Commands.UNUSED, Commands.UNUSED);
+		return board.writeI2c(Commands.TRIM_TEST, adjustTrim(value), Commands.UNUSED, Commands.UNUSED);
 	}
 
 	/**
@@ -281,14 +272,15 @@ public class Motion {
 	 * @throws IOException
 	 */
 	public double trimWrite(int value) throws IOException {
-		if (value > 100) {
-			value = 100;
-		} else if (value < -100) {
-			value = -100;
-		}
-		value += 100;
+		return board.writeI2c(Commands.TRIM_WRITE, adjustTrim(value), Commands.UNUSED, Commands.UNUSED);
+	}
 
-		return board.writeI2c(Commands.TRIM_WRITE, value, Commands.UNUSED, Commands.UNUSED);
+	private int adjustTrim(int val) {
+		return trimRange(val, MIN_TRIM, MAX_TRIM) + TRIM_OFFSET;
+	}
+
+	private int trimRange(int val, int lower, int upper) {
+		return Math.min(Math.max(val, lower), upper);
 	}
 
 	/**
