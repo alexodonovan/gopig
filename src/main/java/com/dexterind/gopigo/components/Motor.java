@@ -30,10 +30,9 @@
  */
 package com.dexterind.gopigo.components;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.dexterind.gopigo.utils.Commands;
-import com.dexterind.gopigo.utils.Debug;
+import com.dexterind.gopigo.utils.*;
 
 /**
  * Handles the motor functions.
@@ -75,10 +74,6 @@ public class Motor {
 	 * The current command.
 	 */
 	private int command = Commands.UNUSED;
-	/**
-	 * The debug object.
-	 */
-	private Debug debug;
 
 	public Motor(int id, Board board) throws IOException, InterruptedException {
 		command = id == LEFT ? LEFT_COMMAND : RIGHT_COMMAND;

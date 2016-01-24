@@ -38,6 +38,8 @@ import com.dexterind.gopigo.behaviours.*;
 import com.dexterind.gopigo.components.*;
 import com.dexterind.gopigo.events.*;
 import com.dexterind.gopigo.utils.*;
+import com.pi4j.io.i2c.*;
+import com.pi4j.system.*;
 
 /**
  * The main class for the Gopigo. It instanciates all the components and
@@ -136,16 +138,18 @@ public final class Gopigo {
 		debug.log(Debug.FINEST, "Instancing a new Gopigo!");
 
 		try {
-			board = Board.getInstance();
-			encoders = Encoders.getInstance();
-			servo = Servo.getInstance();
-			ultraSonicSensor = UltraSonicSensor.getInstance();
-			irReceiverSensor = IRReceiverSensor.getInstance();
-			ledLeft = new Led(Led.LEFT);
-			ledRight = new Led(Led.RIGHT);
+
+			I2CBus bus = createBus();
+			board = BoardFactory.createBoard(bus);
+			encoders = new Encoders(board);
+			servo = new Servo(board);
+			ultraSonicSensor = new UltraSonicSensor(board);
+			irReceiverSensor = new IRReceiverSensor(board);
+			ledLeft = new Led(Led.LEFT, board);
+			ledRight = new Led(Led.RIGHT, board);
 			motorLeft = new Motor(Motor.LEFT, board);
 			motorRight = new Motor(Motor.RIGHT, board);
-			motion = new Motion(Board.getInstance());
+			motion = new Motion(board);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -154,6 +158,20 @@ public final class Gopigo {
 
 		voltageTimer = new Timer();
 		listeners = new CopyOnWriteArrayList<GopigoListener>();
+	}
+
+	private I2CBus createBus() throws IOException, InterruptedException {
+		int busId;
+
+		String type = SystemInfo.getBoardType().name();
+
+		if (type.indexOf("ModelA") > 0) {
+			busId = I2CBus.BUS_0;
+		} else {
+			busId = I2CBus.BUS_1;
+		}
+
+		return I2CFactory.getInstance(busId);
 	}
 
 	/**

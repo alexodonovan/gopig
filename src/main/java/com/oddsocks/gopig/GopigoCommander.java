@@ -214,7 +214,7 @@ public class GopigoCommander implements GopigoListener {
 			}
 			if (command.equals("ultrasonic distance") || command.equals("u")) {
 				outputMessage = "Ultrasonic Distance (cm)";
-				outputValue = Integer.toString(UltraSonicSensor.getInstance().getDistance());
+				outputValue = Integer.toString(gopigo.ultraSonicSensor.getDistance());
 			}
 			if (command.equals("l")) {
 				// TODO
@@ -249,7 +249,7 @@ public class GopigoCommander implements GopigoListener {
 			}
 			if (command.equals("ir receive") || command.equals("u")) {
 				outputMessage = "IR Receiver data::";
-				outputValue = Arrays.toString(IRReceiverSensor.getInstance().read());
+				outputValue = Arrays.toString(gopigo.irReceiverSensor.read());
 			}
 
 			if (outputMessage != null && outputValue != null) {

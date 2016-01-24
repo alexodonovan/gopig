@@ -64,10 +64,6 @@ public class Motion {
 	 * the servo motor or the GoPiGo itself.
 	 */
 	public Map<String, Integer> directions = new HashMap<String, Integer>();
-	/**
-	 * The debug object.
-	 */
-	private Debug debug;
 
 	public Motion(Board board) throws IOException, InterruptedException {
 		directions.put("n", 0);
