@@ -51,7 +51,7 @@ public class GopigoCommander implements GopigoListener {
 		System.out.println("(!) For a complete list of commands, please type help");
 		System.out.println(" ----------------------------------------------------");
 
-		gopigo = Gopigo.getInstance();
+		gopigo = new Gopigo();
 		gopigo.addListener(this);
 
 		gopigo.ultraSonicSensor.setPin(ultrasonicPin);

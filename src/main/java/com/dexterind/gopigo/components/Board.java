@@ -30,6 +30,8 @@
  */
 package com.dexterind.gopigo.components;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.io.*;
 import java.nio.*;
 
@@ -51,6 +53,9 @@ public class Board {
 	 * The I2CDevice object.
 	 */
 	private final I2CDevice device;
+
+	private final Gopigo gopigo;
+
 	/**
 	 * The output mode for the pin.
 	 */
@@ -65,8 +70,11 @@ public class Board {
 	 */
 	private Debug debug;
 
-	public Board(I2CDevice device) throws IOException, InterruptedException {
+	public Board(I2CDevice device, Gopigo gopigo) throws IOException, InterruptedException {
+		checkNotNull(device);
+		checkNotNull(gopigo);
 		this.device = device;
+		this.gopigo = gopigo;
 	}
 
 	/**
@@ -106,8 +114,8 @@ public class Board {
 	}
 
 	private void checkHalt() {
-		if (!Gopigo.getInstance().isHalt()) return;
-		Gopigo.getInstance().onHalt();
+		if (!gopigo.isHalt()) return;
+		gopigo.onHalt();
 	}
 
 	/**
@@ -231,7 +239,7 @@ public class Board {
 			e.printStackTrace(new PrintWriter(sw));
 			String exceptionDetails = sw.toString();
 			debug.log(Debug.SEVERE, exceptionDetails);
-			Gopigo.getInstance().halt();
+			gopigo.halt();
 		}
 	}
 

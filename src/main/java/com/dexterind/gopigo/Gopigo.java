@@ -48,11 +48,8 @@ import com.pi4j.system.*;
  * @author marcello
  * 
  */
-public final class Gopigo {
-	/**
-	 * The instance of the current object.
-	 */
-	private static Gopigo instance;
+public class Gopigo {
+
 	/**
 	 * The flag for the initialized status.
 	 */
@@ -140,7 +137,7 @@ public final class Gopigo {
 		try {
 
 			I2CBus bus = createBus();
-			board = BoardFactory.createBoard(bus);
+			board = BoardFactory.createBoard(bus, this);
 			encoders = new Encoders(board);
 			servo = new Servo(board);
 			ultraSonicSensor = new UltraSonicSensor(board);
@@ -172,18 +169,6 @@ public final class Gopigo {
 		}
 
 		return I2CFactory.getInstance(busId);
-	}
-
-	/**
-	 * Provides a global point of access to the Gopigo instance.
-	 * 
-	 * @return the <code>Gopigo</code> instance.
-	 */
-	public static Gopigo getInstance() {
-		if (instance == null) {
-			instance = new Gopigo();
-		}
-		return instance;
 	}
 
 	/**
@@ -269,6 +254,7 @@ public final class Gopigo {
 	 * event in case of low voltage.
 	 */
 	private void initVoltageCheck() {
+		final Gopigo gopigo = this;
 		voltageTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
@@ -277,24 +263,24 @@ public final class Gopigo {
 						double voltage;
 						Boolean dispatchEvent = false;
 						try {
-							Gopigo.getInstance().debug.log(Debug.INFO, "Voltage check");
+							gopigo.debug.log(Debug.INFO, "Voltage check");
 
-							voltage = Gopigo.getInstance().board.volt();
-							if (voltage < Gopigo.getInstance().getMinVoltage()) {
-								Gopigo.getInstance().debug.log(Debug.WARNING, "Low voltage detected");
-								Gopigo.getInstance().free();
+							voltage = gopigo.board.volt();
+							if (voltage < gopigo.getMinVoltage()) {
+								gopigo.debug.log(Debug.WARNING, "Low voltage detected");
+								gopigo.free();
 								dispatchEvent = true;
-							} else if (voltage <= Gopigo.getInstance().getCriticalVoltage()) {
-								Gopigo.getInstance().debug.log(Debug.SEVERE, "Critical voltage detected. GoPiGo is now halted.");
-								Gopigo.getInstance().halt();
+							} else if (voltage <= gopigo.getCriticalVoltage()) {
+								gopigo.debug.log(Debug.SEVERE, "Critical voltage detected. GoPiGo is now halted.");
+								gopigo.halt();
 								dispatchEvent = true;
 							} else {
-								Gopigo.getInstance().free();
+								gopigo.free();
 							}
 
 							if (dispatchEvent) {
-								VoltageEvent voltageEvent = new VoltageEvent(Gopigo.getInstance(), voltage);
-								Gopigo.getInstance().fireEvent(voltageEvent);
+								VoltageEvent voltageEvent = new VoltageEvent(gopigo, voltage);
+								gopigo.fireEvent(voltageEvent);
 							}
 						} catch (IOException e) {
 							e.printStackTrace();
