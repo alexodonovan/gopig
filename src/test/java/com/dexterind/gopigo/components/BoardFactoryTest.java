@@ -29,6 +29,7 @@ public class BoardFactoryTest {
 
 	@Before
 	public void setUp() throws IOException {
+		new BoardFactory();
 		when(bus.getDevice(anyInt())).thenReturn(device);
 	}
 
