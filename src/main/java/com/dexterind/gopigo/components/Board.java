@@ -322,4 +322,8 @@ public class Board {
 
 		return status_reg;
 	}
+
+	public void setDebug(Debug debug) {
+		this.debug = debug;
+	}
 }
