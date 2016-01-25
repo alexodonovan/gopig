@@ -100,12 +100,20 @@ public class BoardTest {
 		assertThat(sut.analogWrite(10, 2), is(Statuses.OK));
 		byte[] bytes = { (byte) 15, (byte) 10, (byte) 2, (byte) 0 };
 		verify(device).write(0xfe, bytes, 0, 4);
-		
-		//always returns -2 unless pin 10 sent
-		assertThat(sut.analogWrite(9, 2), is(-2));
-		
-		
 
+		// always returns -2 unless pin 10 sent
+		assertThat(sut.analogWrite(9, 2), is(-2));
+
+	}
+
+	@Test
+	public void testDigitalWrite() throws Exception {
+		assertThat(sut.digitalWrite(5, 10), is(Statuses.ERROR));
+
+		assertThat(sut.digitalWrite(5, 0), is(1));
+		assertThat(sut.digitalWrite(5, 1), is(1));
+		byte[] bytes = { (byte) 12, (byte) 5, (byte) 0, (byte) 0 };
+		verify(device).write(0xfe, bytes, 0, 4);
 	}
 
 }
