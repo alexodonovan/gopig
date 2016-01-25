@@ -37,6 +37,8 @@ import com.dexterind.gopigo.utils.*;
 /**
  * Implements the methods needed to set, read, enable or disable the encoders.
  * 
+ * 18 counts on the encoder correspond to 1 rotation of the wheel.
+ * 
  * @author marcello
  * 
  */
@@ -59,7 +61,8 @@ public class Encoders {
 	 * @param m2
 	 *            The value for the motor 2.
 	 * @param target
-	 *            TODO: Find a nice description for the target
+	 *            number of encoder pulses to target (18 per rotation). For
+	 *            moving the wheel by 2 rotations, target should be 36
 	 * @return A status code.
 	 * @throws IOException
 	 */
@@ -67,7 +70,7 @@ public class Encoders {
 		if (m1 > 1 || m1 < 0 || m2 > 1 || m2 < 0) {
 			return Statuses.ERROR;
 		}
-		int m_sel = m1 * 2 + m2;
+		int m_sel = (m1 * 2) + m2;
 		return board.writeI2c(Commands.ENC_TGT, m_sel, target / 256, target % 256);
 	}
 
