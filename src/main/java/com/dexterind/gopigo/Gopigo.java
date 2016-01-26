@@ -380,4 +380,9 @@ public class Gopigo {
 		debug.log(Debug.INFO, "Getting criticalVoltage");
 		return criticalVoltage;
 	}
+
+	public void right90() throws IOException {
+		encoders.targeting(1, 1, 18);
+		motion.rightWithRotation();
+	}
 }

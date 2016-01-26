@@ -126,6 +126,7 @@ public class GopigoCommander implements GopigoListener {
 				System.out.println("move backward with pid => moves the GoPiGo backward with PID");
 				System.out.println("rotate left => rotates the GoPiGo to the left");
 				System.out.println("rotate right => rotates the GoPiGo to the right");
+				System.out.println("right90 => rotates the GoPiGo to the right 90 degrees");
 				System.out.println("set encoder targeting => sets the encoder targeting");
 				System.out.println("firmware version => returns the firmware version");
 				System.out.println("board revision => returns the board reversion");
@@ -234,6 +235,11 @@ public class GopigoCommander implements GopigoListener {
 			if (command.equals("rotate right") || command.equals("m")) {
 				outputMessage = "Rotate right";
 				outputValue = Integer.toString(gopigo.motion.rightWithRotation());
+			}
+			if (command.equals("right90")) {
+				outputMessage = "Rotate right 90 degrees";
+				outputValue = "1";
+				gopigo.right90();
 			}
 			if (command.equals("set encoder targeting") || command.equals("y")) {
 				outputMessage = "Set encoder targeting (1,1,18)";
