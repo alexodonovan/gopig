@@ -28,7 +28,7 @@
  *
  * #L%
  */
-package com.oddsocks.gopig;
+package com.oddsocks.utils;
 
 import java.io.*;
 import java.util.*;
