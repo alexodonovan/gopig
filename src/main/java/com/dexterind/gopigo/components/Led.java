@@ -145,4 +145,8 @@ public class Led {
 			return Statuses.ERROR;
 		}
 	}
+
+	public int getPin() {
+		return pin;
+	}
 }
