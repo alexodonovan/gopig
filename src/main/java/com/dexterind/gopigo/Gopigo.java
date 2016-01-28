@@ -30,16 +30,25 @@
  */
 package com.dexterind.gopigo;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.IOException;
+import java.util.EventObject;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.dexterind.gopigo.behaviours.*;
-import com.dexterind.gopigo.components.*;
-import com.dexterind.gopigo.events.*;
-import com.dexterind.gopigo.utils.*;
-import com.pi4j.io.i2c.*;
-import com.pi4j.system.*;
+import com.dexterind.gopigo.behaviours.Motion;
+import com.dexterind.gopigo.components.Board;
+import com.dexterind.gopigo.components.BoardFactory;
+import com.dexterind.gopigo.components.Encoders;
+import com.dexterind.gopigo.components.Led;
+import com.dexterind.gopigo.components.Motor;
+import com.dexterind.gopigo.events.StatusEvent;
+import com.dexterind.gopigo.events.VoltageEvent;
+import com.dexterind.gopigo.utils.Debug;
+import com.dexterind.gopigo.utils.Statuses;
+import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.system.SystemInfo;
 
 /**
  * The main class for the Gopigo. It instanciates all the components and
@@ -87,18 +96,6 @@ public class Gopigo {
 	 */
 	public Encoders encoders;
 	/**
-	 * The servo motor.
-	 */
-	public Servo servo;
-	/**
-	 * The ultrasonic sensor.
-	 */
-	public UltraSonicSensor ultraSonicSensor;
-	/**
-	 * The IR Receiver sensor.
-	 */
-	public IRReceiverSensor irReceiverSensor;
-	/**
 	 * The left led.
 	 */
 	public Led ledLeft;
@@ -139,9 +136,6 @@ public class Gopigo {
 			I2CBus bus = createBus();
 			board = BoardFactory.createBoard(bus, this);
 			encoders = new Encoders(board);
-			servo = new Servo(board);
-			ultraSonicSensor = new UltraSonicSensor(board);
-			irReceiverSensor = new IRReceiverSensor(board);
 			ledLeft = new Led(Led.LEFT, board);
 			ledRight = new Led(Led.RIGHT, board);
 			motorLeft = new Motor(Motor.LEFT, board);
@@ -195,7 +189,6 @@ public class Gopigo {
 	 */
 	public void reset() throws IOException {
 		debug.log(Debug.INFO, "Reset");
-		servo.move(motion.directions.get("e"));
 		ledLeft.off();
 		ledRight.off();
 		motion.setSpeed(255);

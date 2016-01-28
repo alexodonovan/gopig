@@ -30,17 +30,18 @@
  */
 package com.oddsocks.utils;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-import com.dexterind.gopigo.*;
-import com.dexterind.gopigo.components.*;
-import com.dexterind.gopigo.events.*;
-import com.dexterind.gopigo.utils.*;
+import com.dexterind.gopigo.Gopigo;
+import com.dexterind.gopigo.GopigoListener;
+import com.dexterind.gopigo.components.Motor;
+import com.dexterind.gopigo.events.StatusEvent;
+import com.dexterind.gopigo.events.VoltageEvent;
+import com.dexterind.gopigo.utils.Statuses;
 
 public class GopigoCommander implements GopigoListener {
-	private static int ultrasonicPin = 15;
-	// private static int irReceiverPin = 8;
 
 	private static Gopigo gopigo = null;
 
@@ -54,8 +55,6 @@ public class GopigoCommander implements GopigoListener {
 		gopigo = new Gopigo();
 		gopigo.addListener(this);
 
-		gopigo.ultraSonicSensor.setPin(ultrasonicPin);
-		// gopigo.irReceiverSensor.setPin(irReceiverPin);
 		gopigo.setMinVoltage(5.5);
 		gopigo.init();
 	}
@@ -205,17 +204,9 @@ public class GopigoCommander implements GopigoListener {
 				outputMessage = "Voltage";
 				outputValue = Double.toString(gopigo.board.volt());
 			}
-			if (command.equals("servo test") || command.equals("b")) {
-				outputMessage = "Servo test";
-				outputValue = Integer.toString(gopigo.servo.move(90));
-			}
 			if (command.equals("exit") || command.equals("z")) {
 				System.out.println("Ok, bye!");
 				System.exit(1);
-			}
-			if (command.equals("ultrasonic distance") || command.equals("u")) {
-				outputMessage = "Ultrasonic Distance (cm)";
-				outputValue = Integer.toString(gopigo.ultraSonicSensor.getDistance());
 			}
 			if (command.equals("l")) {
 				// TODO
@@ -252,10 +243,6 @@ public class GopigoCommander implements GopigoListener {
 			if (command.equals("board revision") || command.equals("f")) {
 				outputMessage = "Board revision";
 				outputValue = Integer.toString(gopigo.board.revision());
-			}
-			if (command.equals("ir receive") || command.equals("u")) {
-				outputMessage = "IR Receiver data::";
-				outputValue = Arrays.toString(gopigo.irReceiverSensor.read());
 			}
 
 			if (outputMessage != null && outputValue != null) {
