@@ -2,6 +2,7 @@ package com.dexterind.gopigo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -126,6 +127,15 @@ public class GopigoTest {
 		verify(board).init();
 		verify(voltageTimer).scheduleAtFixedRate(voltageTaskTimer, 0, 60000);
 		verify(listener).onStatusEvent(new StatusEvent(sut, Statuses.INIT));
+	}
+	
+	@Test
+	public void testInit_when_halted() throws Exception {
+		sut.halt();
+		sut.init();
+		verify(board).init();
+		verify(voltageTimer, times(0)).scheduleAtFixedRate(voltageTaskTimer, 0, 60000);
+		verify(listener, times(0)).onStatusEvent(new StatusEvent(sut, Statuses.INIT));
 	}
 
 	@Test

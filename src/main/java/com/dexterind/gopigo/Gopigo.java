@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import com.dexterind.gopigo.behaviours.Motion;
 import com.dexterind.gopigo.components.Board;
 import com.dexterind.gopigo.components.BoardFactory;
+import com.dexterind.gopigo.components.BusFactory;
 import com.dexterind.gopigo.components.Encoders;
 import com.dexterind.gopigo.components.Led;
 import com.dexterind.gopigo.components.Motor;
@@ -51,8 +52,6 @@ import com.dexterind.gopigo.events.VoltageEvent;
 import com.dexterind.gopigo.utils.Statuses;
 import com.dexterind.gopigo.utils.VoltageTaskTimer;
 import com.pi4j.io.i2c.I2CBus;
-import com.pi4j.io.i2c.I2CFactory;
-import com.pi4j.system.SystemInfo;
 
 /**
  * The main class for the Gopigo. It instanciates all the components and
@@ -144,7 +143,7 @@ public class Gopigo {
 	public void postContruct() {
 		try {
 
-			I2CBus bus = createBus();
+			I2CBus bus = BusFactory.createBus();
 			board = BoardFactory.createBoard(bus, this);
 			encoders = new Encoders(board);
 			ledLeft = new Led(Led.LEFT, board);
@@ -152,26 +151,9 @@ public class Gopigo {
 			motorLeft = new Motor(Motor.LEFT, board);
 			motorRight = new Motor(Motor.RIGHT, board);
 			motion = new Motion(board);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private I2CBus createBus() throws IOException, InterruptedException {
-		int busId;
-
-		String type = SystemInfo.getBoardType()
-								.name();
-
-		if (type.indexOf("ModelA") > 0) {
-			busId = I2CBus.BUS_0;
-		} else {
-			busId = I2CBus.BUS_1;
-		}
-
-		return I2CFactory.getInstance(busId);
 	}
 
 	/**
