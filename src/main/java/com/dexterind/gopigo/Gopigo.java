@@ -96,7 +96,7 @@ public class Gopigo {
 	 * The main object which handles the methods to get access to the resources
 	 * connected to the board.
 	 */
-	public Board board;
+	private Board board;
 	/**
 	 * The encoders.
 	 */
@@ -385,6 +385,26 @@ public class Gopigo {
 
 	public void setEncoders(Encoders encoders) {
 		this.encoders = encoders;
+	}
+
+	public double boardVoltage() throws IOException {
+		return board.volt();
+	}
+
+	public float boardVersion() throws IOException {
+		return board.version();
+	}
+
+	public int boardRevision() throws IOException {
+		return board.revision();
+	}
+
+	public boolean isLowBoardVoltage() throws IOException {
+		return boardVoltage() < getMinVoltage();
+	}
+
+	public boolean isCriticallyLowVoltage() throws IOException {
+		return boardVoltage() <= getCriticalVoltage();
 	}
 
 }

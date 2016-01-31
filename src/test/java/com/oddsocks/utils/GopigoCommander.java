@@ -203,7 +203,7 @@ public class GopigoCommander implements GopigoListener {
 			}
 			if (command.equals("voltage")) {
 				outputMessage = "Voltage";
-				outputValue = Double.toString(gopigo.board.volt());
+				outputValue = Double.toString(gopigo.boardVoltage());
 			}
 			if (command.equals("exit") || command.equals("z")) {
 				System.out.println("Ok, bye!");
@@ -239,11 +239,11 @@ public class GopigoCommander implements GopigoListener {
 			}
 			if (command.equals("firmware version") || command.equals("f")) {
 				outputMessage = "Firmware version";
-				outputValue = Float.toString(gopigo.board.version());
+				outputValue = Float.toString(gopigo.boardVersion());
 			}
 			if (command.equals("board revision") || command.equals("f")) {
 				outputMessage = "Board revision";
-				outputValue = Integer.toString(gopigo.board.revision());
+				outputValue = Integer.toString(gopigo.boardRevision());
 			}
 
 			if (outputMessage != null && outputValue != null) {

@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.EventObject;
 import java.util.Timer;
@@ -169,6 +170,42 @@ public class GopigoTest {
 		sut.right90();
 		verify(encoders).targeting(1, 1, 18);
 		verify(motion).rightWithRotation();
+	}
+
+	@Test
+	public void testBoardVoltage() throws Exception {
+		when(board.volt()).thenReturn(5.5);
+		assertThat(sut.boardVoltage(), is(5.5));
+	}
+
+	@Test
+	public void testBoardVersion() throws Exception {
+		when(board.version()).thenReturn(2.1f);
+		assertThat(sut.boardVersion(), is(2.1f));
+	}
+
+	@Test
+	public void testBoardRevision() throws Exception {
+		when(board.revision()).thenReturn(2);
+		assertThat(sut.boardRevision(), is(2));
+	}
+
+	@Test
+	public void testIsLowBoardVoltage() throws Exception {
+		when(board.volt()).thenReturn(0.5);
+		assertThat(sut.isLowBoardVoltage(), is(true));
+
+		when(board.volt()).thenReturn(7.0);
+		assertThat(sut.isLowBoardVoltage(), is(false));
+	}
+
+	@Test
+	public void testIsCriticallyLowVoltage() throws Exception {
+		when(board.volt()).thenReturn(0.5);
+		assertThat(sut.isCriticallyLowVoltage(), is(true));
+
+		when(board.volt()).thenReturn(7.0);
+		assertThat(sut.isCriticallyLowVoltage(), is(false));
 	}
 
 }
