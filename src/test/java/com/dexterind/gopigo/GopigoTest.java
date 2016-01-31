@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.EventObject;
+import java.util.Timer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +15,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.dexterind.gopigo.behaviours.Motion;
+import com.dexterind.gopigo.components.Board;
 import com.dexterind.gopigo.components.Led;
 import com.dexterind.gopigo.events.StatusEvent;
 import com.dexterind.gopigo.events.VoltageEvent;
 import com.dexterind.gopigo.utils.Statuses;
+import com.dexterind.gopigo.utils.VoltageTaskTimer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GopigoTest {
@@ -45,6 +48,15 @@ public class GopigoTest {
 	@Mock
 	private EventObject genericEvent;
 
+	@Mock
+	private VoltageTaskTimer voltageTaskTimer;
+
+	@Mock
+	private Timer voltageTimer;
+
+	@Mock
+	private Board board;
+
 	@Before
 	public void setUp() {
 		sut = new Gopigo();
@@ -52,6 +64,9 @@ public class GopigoTest {
 		sut.setLedRight(ledRight);
 		sut.setMotion(motion);
 		sut.addListener(listener);
+		sut.setVoltageTaskTimer(voltageTaskTimer);
+		sut.setVoltageTimer(voltageTimer);
+		sut.setBoard(board);
 	}
 
 	@Test
@@ -97,6 +112,14 @@ public class GopigoTest {
 		sut.onHalt();
 		verify(listener).onStatusEvent(new StatusEvent(this, Statuses.HALT));
 
+	}
+
+	@Test
+	public void testInit() throws Exception {
+		sut.init();
+		verify(board).init();
+		verify(voltageTimer).scheduleAtFixedRate(voltageTaskTimer, 0, 60000);
+		verify(listener).onStatusEvent(new StatusEvent(sut, Statuses.INIT));
 	}
 
 }

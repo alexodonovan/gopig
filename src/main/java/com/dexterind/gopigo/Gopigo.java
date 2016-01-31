@@ -136,6 +136,8 @@ public class Gopigo {
 		logger.trace("Instancing a new Gopigo!");
 
 		voltageTimer = new Timer();
+		voltageTaskTimer = new VoltageTaskTimer(this);
+
 		listeners = new CopyOnWriteArrayList<GopigoListener>();
 	}
 
@@ -150,7 +152,6 @@ public class Gopigo {
 			motorLeft = new Motor(Motor.LEFT, board);
 			motorRight = new Motor(Motor.RIGHT, board);
 			motion = new Motion(board);
-			voltageTaskTimer = new VoltageTaskTimer(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -161,7 +162,8 @@ public class Gopigo {
 	private I2CBus createBus() throws IOException, InterruptedException {
 		int busId;
 
-		String type = SystemInfo.getBoardType().name();
+		String type = SystemInfo.getBoardType()
+								.name();
 
 		if (type.indexOf("ModelA") > 0) {
 			busId = I2CBus.BUS_0;
@@ -183,9 +185,7 @@ public class Gopigo {
 		if (!isHalt) {
 			isInit = true;
 			initVoltageCheck();
-
-			StatusEvent statusEvent = new StatusEvent(this, Statuses.INIT);
-			fireEvent(statusEvent);
+			fireEvent(Statuses.INIT);
 		}
 	}
 
@@ -236,7 +236,8 @@ public class Gopigo {
 		logger.info("Firing event [" + listeners.toArray().length + " listeners]");
 
 		for (GopigoListener listener : listeners) {
-			logger.info("listener[{}] {}", i, event.getClass().toString());
+			logger.info("listener[{}] {}", i, event.getClass()
+												   .toString());
 
 			if (event instanceof StatusEvent) {
 				listener.onStatusEvent((StatusEvent) event);
@@ -245,6 +246,10 @@ public class Gopigo {
 			}
 			i++;
 		}
+	}
+
+	private void fireEvent(int status) {
+		fireEvent(new StatusEvent(this, status));
 	}
 
 	/**
@@ -298,8 +303,7 @@ public class Gopigo {
 	 */
 	public void onHalt() {
 		logger.warn("The GoPigo seems to be halted, it will be probably difficult to execute the commands.");
-		StatusEvent statusEvent = new StatusEvent(this, Statuses.HALT);
-		fireEvent(statusEvent);
+		fireEvent(Statuses.HALT);
 	}
 
 	/**
@@ -365,6 +369,18 @@ public class Gopigo {
 	public boolean hasListener(GopigoListener candidate) {
 		checkNotNull(candidate);
 		return listeners.contains(candidate);
+	}
+
+	public void setVoltageTaskTimer(VoltageTaskTimer voltageTaskTimer) {
+		this.voltageTaskTimer = voltageTaskTimer;
+	}
+
+	public void setVoltageTimer(Timer voltageTimer) {
+		this.voltageTimer = voltageTimer;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 
 }
