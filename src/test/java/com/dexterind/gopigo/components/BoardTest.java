@@ -19,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.dexterind.gopigo.Gopigo;
 import com.dexterind.gopigo.utils.Commands;
-import com.dexterind.gopigo.utils.Debug;
 import com.dexterind.gopigo.utils.Statuses;
 import com.pi4j.io.i2c.I2CDevice;
 
@@ -34,13 +33,9 @@ public class BoardTest {
 	@Mock
 	private Gopigo gopigo;
 
-	@Mock
-	private Debug debug;
-
 	@Before
 	public void setUp() throws Exception {
 		sut = new Board(device, gopigo);
-		sut.setDebug(debug);
 		when(gopigo.isHalt()).thenReturn(false);
 
 	}
@@ -57,8 +52,6 @@ public class BoardTest {
 		sut.init();
 		// halts the gopigo
 		verify(gopigo).halt();
-		// logs the error
-		verify(debug).log(eq(Debug.SEVERE), Mockito.anyString());
 	}
 
 	@Test

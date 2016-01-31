@@ -30,14 +30,20 @@
  */
 package com.dexterind.gopigo.components;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.*;
-import java.nio.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
 
-import com.dexterind.gopigo.*;
-import com.dexterind.gopigo.utils.*;
-import com.pi4j.io.i2c.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dexterind.gopigo.Gopigo;
+import com.dexterind.gopigo.utils.Commands;
+import com.dexterind.gopigo.utils.Statuses;
+import com.pi4j.io.i2c.I2CDevice;
 
 /**
  * Defines all the methods to get access to the resources connected to the
@@ -48,6 +54,8 @@ import com.pi4j.io.i2c.*;
  * 
  */
 public class Board {
+
+	private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
 	/**
 	 * The I2CDevice object.
@@ -68,8 +76,6 @@ public class Board {
 	/**
 	 * The debug object.
 	 */
-	private Debug debug;
-
 	public Board(I2CDevice device, Gopigo gopigo) throws IOException, InterruptedException {
 		checkNotNull(device);
 		checkNotNull(gopigo);
@@ -237,8 +243,7 @@ public class Board {
 		} catch (IOException e) {
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
-			String exceptionDetails = sw.toString();
-			debug.log(Debug.SEVERE, exceptionDetails);
+			logger.error(sw.toString());
 			gopigo.halt();
 		}
 	}
@@ -323,7 +328,4 @@ public class Board {
 		return status_reg;
 	}
 
-	public void setDebug(Debug debug) {
-		this.debug = debug;
-	}
 }

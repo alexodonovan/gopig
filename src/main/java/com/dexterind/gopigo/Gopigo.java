@@ -36,6 +36,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dexterind.gopigo.behaviours.Motion;
 import com.dexterind.gopigo.components.Board;
 import com.dexterind.gopigo.components.BoardFactory;
@@ -44,7 +47,6 @@ import com.dexterind.gopigo.components.Led;
 import com.dexterind.gopigo.components.Motor;
 import com.dexterind.gopigo.events.StatusEvent;
 import com.dexterind.gopigo.events.VoltageEvent;
-import com.dexterind.gopigo.utils.Debug;
 import com.dexterind.gopigo.utils.Statuses;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
@@ -58,6 +60,8 @@ import com.pi4j.system.SystemInfo;
  * 
  */
 public class Gopigo {
+
+	private static final Logger logger = LoggerFactory.getLogger(Gopigo.class);
 
 	/**
 	 * The flag for the initialized status.
@@ -119,17 +123,13 @@ public class Gopigo {
 	 * The list of the listeners which are listening for some event.
 	 */
 	private final CopyOnWriteArrayList<GopigoListener> listeners;
-	/**
-	 * The debug object.
-	 */
-	private Debug debug;
 
 	/**
 	 * Instanciates the components and the behaviours of the Gopigo.
 	 */
 	public Gopigo() {
-		debug = new Debug("com.dexterind.gopigo.Gopigo");
-		debug.log(Debug.FINEST, "Instancing a new Gopigo!");
+		logger.info("com.dexterind.gopigo.Gopigo");
+		logger.trace("Instancing a new Gopigo!");
 
 		try {
 
@@ -169,7 +169,7 @@ public class Gopigo {
 	 * Initializes the Gopigo and fires an event once the init is done.
 	 */
 	public void init() {
-		debug.log(Debug.FINE, "Init " + isInit);
+		logger.trace("Init " + isInit);
 
 		board.init();
 
@@ -188,7 +188,7 @@ public class Gopigo {
 	 * @throws IOException
 	 */
 	public void reset() throws IOException {
-		debug.log(Debug.INFO, "Reset");
+		logger.info("Reset");
 		ledLeft.off();
 		ledRight.off();
 		motion.setSpeed(255);
@@ -202,7 +202,7 @@ public class Gopigo {
 	 *            The <code>GopigoListener</code> to register.
 	 */
 	public void addListener(GopigoListener listener) {
-		debug.log(Debug.INFO, "Adding listener");
+		logger.info("Adding listener");
 		listeners.addIfAbsent(listener);
 	}
 
@@ -214,7 +214,7 @@ public class Gopigo {
 	 */
 	public void removeListener(GopigoListener listener) {
 		if (listeners != null) {
-			debug.log(Debug.INFO, "Removing listener");
+			logger.info("Removing listener");
 			listeners.remove(listener);
 		}
 	}
@@ -227,11 +227,11 @@ public class Gopigo {
 	 */
 	protected void fireEvent(EventObject event) {
 		int i = 0;
-		debug.log(Debug.INFO, "Firing event [" + listeners.toArray().length + " listeners]");
+		logger.info("Firing event [" + listeners.toArray().length + " listeners]");
 
 		for (GopigoListener listener : listeners) {
-			debug.log(Debug.INFO, "listener[" + i + "]");
-			debug.log(Debug.INFO, event.getClass().toString());
+			logger.info("listener[" + i + "]");
+			logger.info(event.getClass().toString());
 
 			if (event instanceof StatusEvent) {
 				listener.onStatusEvent((StatusEvent) event);
@@ -256,15 +256,15 @@ public class Gopigo {
 						double voltage;
 						Boolean dispatchEvent = false;
 						try {
-							gopigo.debug.log(Debug.INFO, "Voltage check");
+							logger.info("Voltage check");
 
 							voltage = gopigo.board.volt();
 							if (voltage < gopigo.getMinVoltage()) {
-								gopigo.debug.log(Debug.WARNING, "Low voltage detected");
+								logger.debug("Low voltage detected");
 								gopigo.free();
 								dispatchEvent = true;
 							} else if (voltage <= gopigo.getCriticalVoltage()) {
-								gopigo.debug.log(Debug.SEVERE, "Critical voltage detected. GoPiGo is now halted.");
+								logger.debug("Critical voltage detected. GoPiGo is now halted.");
 								gopigo.halt();
 								dispatchEvent = true;
 							} else {
@@ -289,7 +289,7 @@ public class Gopigo {
 	 */
 	public void free() {
 		if (isHalt) {
-			debug.log(Debug.INFO, "The GoPigo was halted. I'm setting it free.");
+			logger.info("The GoPigo was halted. I'm setting it free.");
 			isHalt = false;
 		}
 	}
@@ -308,7 +308,7 @@ public class Gopigo {
 	 */
 	public void halt() {
 		if (!isHalt) {
-			debug.log(Debug.WARNING, "The GoPigo was free, now it's halted.");
+			logger.warn("The GoPigo was free, now it's halted.");
 			isHalt = true;
 		}
 	}
@@ -326,7 +326,7 @@ public class Gopigo {
 	 * Fires a "HALT" <code>StatusEvent</code>
 	 */
 	public void onHalt() {
-		debug.log(Debug.WARNING, "The GoPigo seems to be halted, it will be probably difficult to execute the commands.");
+		logger.warn("The GoPigo seems to be halted, it will be probably difficult to execute the commands.");
 		StatusEvent statusEvent = new StatusEvent(this, Statuses.HALT);
 		fireEvent(statusEvent);
 	}
@@ -338,7 +338,7 @@ public class Gopigo {
 	 *            The minimum voltage value to set.
 	 */
 	public void setMinVoltage(double value) {
-		debug.log(Debug.INFO, "Setting minVoltage to " + Double.toString(value));
+		logger.info("Setting minVoltage to " + Double.toString(value));
 		minVoltage = value;
 	}
 
@@ -348,7 +348,7 @@ public class Gopigo {
 	 * @return The min. voltage value.
 	 */
 	public Double getMinVoltage() {
-		debug.log(Debug.INFO, "Getting minVoltage");
+		logger.info("Getting minVoltage");
 		return minVoltage;
 	}
 
@@ -360,7 +360,7 @@ public class Gopigo {
 	 *            The critical voltage value to set.
 	 */
 	public void setCriticalVoltage(double value) {
-		debug.log(Debug.INFO, "Setting criticalVoltage to " + Double.toString(value));
+		logger.info("Setting criticalVoltage to " + Double.toString(value));
 		criticalVoltage = value;
 	}
 
@@ -370,7 +370,7 @@ public class Gopigo {
 	 * @return The Critical voltage value.
 	 */
 	public Double getCriticalVoltage() {
-		debug.log(Debug.INFO, "Getting criticalVoltage");
+		logger.info("Getting criticalVoltage");
 		return criticalVoltage;
 	}
 
