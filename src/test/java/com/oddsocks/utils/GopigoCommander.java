@@ -53,6 +53,7 @@ public class GopigoCommander implements GopigoListener {
 		System.out.println(" ----------------------------------------------------");
 
 		gopigo = new Gopigo();
+		gopigo.postContruct();
 		gopigo.addListener(this);
 
 		gopigo.setMinVoltage(5.5);

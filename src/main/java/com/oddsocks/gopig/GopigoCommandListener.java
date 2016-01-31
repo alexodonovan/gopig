@@ -13,6 +13,7 @@ public class GopigoCommandListener implements GopigoListener {
 
 	public GopigoCommandListener() throws IOException, InterruptedException {
 		gopigo = new Gopigo();
+		gopigo.postContruct();
 		gopigo.addListener(this);
 		gopigo.setMinVoltage(5.5);
 		gopigo.init();

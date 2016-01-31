@@ -32,12 +32,12 @@ package com.dexterind.gopigo.events;
 
 import java.util.EventObject;
 
-/**
- * A status event is fired at every change to the GoPiGo status.
- * 
- * @author marcello
- * 
- */
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+//TODO add a timestamp to the event.
 public class StatusEvent extends EventObject {
 
 	private static final long serialVersionUID = -2236533038040111378L;
@@ -58,6 +58,29 @@ public class StatusEvent extends EventObject {
 
 	public int getStatus() {
 		return status;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof StatusEvent)) return false;
+
+		StatusEvent rhs = (StatusEvent) obj;
+
+		return new EqualsBuilder().append(status, rhs.status)
+								  .isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(status)
+									.toHashCode();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(status)
+																		  .toString();
 	}
 
 }

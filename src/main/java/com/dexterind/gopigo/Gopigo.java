@@ -30,10 +30,11 @@
  */
 package com.dexterind.gopigo;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.util.EventObject;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ import com.dexterind.gopigo.components.Motor;
 import com.dexterind.gopigo.events.StatusEvent;
 import com.dexterind.gopigo.events.VoltageEvent;
 import com.dexterind.gopigo.utils.Statuses;
+import com.dexterind.gopigo.utils.VoltageTaskTimer;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.system.SystemInfo;
@@ -124,6 +126,8 @@ public class Gopigo {
 	 */
 	private final CopyOnWriteArrayList<GopigoListener> listeners;
 
+	private VoltageTaskTimer voltageTaskTimer;
+
 	/**
 	 * Instanciates the components and the behaviours of the Gopigo.
 	 */
@@ -131,6 +135,11 @@ public class Gopigo {
 		logger.info("com.dexterind.gopigo.Gopigo");
 		logger.trace("Instancing a new Gopigo!");
 
+		voltageTimer = new Timer();
+		listeners = new CopyOnWriteArrayList<GopigoListener>();
+	}
+
+	public void postContruct() {
 		try {
 
 			I2CBus bus = createBus();
@@ -141,14 +150,12 @@ public class Gopigo {
 			motorLeft = new Motor(Motor.LEFT, board);
 			motorRight = new Motor(Motor.RIGHT, board);
 			motion = new Motion(board);
+			voltageTaskTimer = new VoltageTaskTimer(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		voltageTimer = new Timer();
-		listeners = new CopyOnWriteArrayList<GopigoListener>();
 	}
 
 	private I2CBus createBus() throws IOException, InterruptedException {
@@ -202,7 +209,7 @@ public class Gopigo {
 	 *            The <code>GopigoListener</code> to register.
 	 */
 	public void addListener(GopigoListener listener) {
-		logger.info("Adding listener");
+		logger.info("Adding listener {}", listener);
 		listeners.addIfAbsent(listener);
 	}
 
@@ -213,10 +220,9 @@ public class Gopigo {
 	 *            The <code>GopigoListener</code> to remove.
 	 */
 	public void removeListener(GopigoListener listener) {
-		if (listeners != null) {
-			logger.info("Removing listener");
-			listeners.remove(listener);
-		}
+		if (!hasListener(listener)) return;
+		logger.info("Removing listener {}", listener);
+		listeners.remove(listener);
 	}
 
 	/**
@@ -225,13 +231,12 @@ public class Gopigo {
 	 * @param event
 	 *            The event to fire.
 	 */
-	protected void fireEvent(EventObject event) {
+	public void fireEvent(EventObject event) {
 		int i = 0;
 		logger.info("Firing event [" + listeners.toArray().length + " listeners]");
 
 		for (GopigoListener listener : listeners) {
-			logger.info("listener[" + i + "]");
-			logger.info(event.getClass().toString());
+			logger.info("listener[{}] {}", i, event.getClass().toString());
 
 			if (event instanceof StatusEvent) {
 				listener.onStatusEvent((StatusEvent) event);
@@ -247,41 +252,7 @@ public class Gopigo {
 	 * event in case of low voltage.
 	 */
 	private void initVoltageCheck() {
-		final Gopigo gopigo = this;
-		voltageTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				new Thread(new Runnable() {
-					public void run() {
-						double voltage;
-						Boolean dispatchEvent = false;
-						try {
-							logger.info("Voltage check");
-
-							voltage = gopigo.board.volt();
-							if (voltage < gopigo.getMinVoltage()) {
-								logger.debug("Low voltage detected");
-								gopigo.free();
-								dispatchEvent = true;
-							} else if (voltage <= gopigo.getCriticalVoltage()) {
-								logger.debug("Critical voltage detected. GoPiGo is now halted.");
-								gopigo.halt();
-								dispatchEvent = true;
-							} else {
-								gopigo.free();
-							}
-
-							if (dispatchEvent) {
-								VoltageEvent voltageEvent = new VoltageEvent(gopigo, voltage);
-								gopigo.fireEvent(voltageEvent);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}).start();
-			}
-		}, 0, voltageTimerTime);
+		voltageTimer.scheduleAtFixedRate(voltageTaskTimer, 0, voltageTimerTime);
 	}
 
 	/**
@@ -378,4 +349,22 @@ public class Gopigo {
 		encoders.targeting(1, 1, 18);
 		motion.rightWithRotation();
 	}
+
+	public void setLedLeft(Led ledLeft) {
+		this.ledLeft = ledLeft;
+	}
+
+	public void setLedRight(Led ledRight) {
+		this.ledRight = ledRight;
+	}
+
+	public void setMotion(Motion motion) {
+		this.motion = motion;
+	}
+
+	public boolean hasListener(GopigoListener candidate) {
+		checkNotNull(candidate);
+		return listeners.contains(candidate);
+	}
+
 }
