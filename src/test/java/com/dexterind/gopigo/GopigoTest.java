@@ -16,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.dexterind.gopigo.behaviours.Motion;
 import com.dexterind.gopigo.components.Board;
+import com.dexterind.gopigo.components.Encoders;
 import com.dexterind.gopigo.components.Led;
 import com.dexterind.gopigo.events.StatusEvent;
 import com.dexterind.gopigo.events.VoltageEvent;
@@ -57,6 +58,9 @@ public class GopigoTest {
 	@Mock
 	private Board board;
 
+	@Mock
+	private Encoders encoders;
+
 	@Before
 	public void setUp() {
 		sut = new Gopigo();
@@ -67,6 +71,7 @@ public class GopigoTest {
 		sut.setVoltageTaskTimer(voltageTaskTimer);
 		sut.setVoltageTimer(voltageTimer);
 		sut.setBoard(board);
+		sut.setEncoders(encoders);
 	}
 
 	@Test
@@ -120,6 +125,50 @@ public class GopigoTest {
 		verify(board).init();
 		verify(voltageTimer).scheduleAtFixedRate(voltageTaskTimer, 0, 60000);
 		verify(listener).onStatusEvent(new StatusEvent(sut, Statuses.INIT));
+	}
+
+	@Test
+	public void testFree() throws Exception {
+		sut.halt();
+		assertThat(sut.isHalt(), is(true));
+		sut.free();
+		assertThat(sut.isHalt(), is(false));
+
+		assertThat(sut.isOperative(), is(true));
+	}
+
+	@Test
+	public void testHalt() throws Exception {
+		assertThat(sut.isHalt(), is(false));
+		sut.halt();
+		assertThat(sut.isHalt(), is(true));
+
+		// second call has not effect
+		sut.halt();
+		assertThat(sut.isHalt(), is(true));
+
+		assertThat(sut.isOperative(), is(false));
+	}
+
+	@Test
+	public void testMinVoltage() throws Exception {
+		assertThat(sut.getMinVoltage(), is(5.5));
+		sut.setMinVoltage(12.0);
+		assertThat(sut.getMinVoltage(), is(12.0));
+	}
+
+	@Test
+	public void testCriticalVoltage() throws Exception {
+		assertThat(sut.getCriticalVoltage(), is(1.0));
+		sut.setCriticalVoltage(12.0);
+		assertThat(sut.getCriticalVoltage(), is(12.0));
+	}
+
+	@Test
+	public void testRight90() throws Exception {
+		sut.right90();
+		verify(encoders).targeting(1, 1, 18);
+		verify(motion).rightWithRotation();
 	}
 
 }

@@ -383,4 +383,8 @@ public class Gopigo {
 		this.board = board;
 	}
 
+	public void setEncoders(Encoders encoders) {
+		this.encoders = encoders;
+	}
+
 }
