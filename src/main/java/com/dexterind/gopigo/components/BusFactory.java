@@ -8,7 +8,7 @@ import com.pi4j.system.SystemInfo;
 
 public class BusFactory {
 
-	public static I2CBus createBus() throws IOException, InterruptedException {
+	public I2CBus createBus() throws IOException, InterruptedException {
 		int busId;
 		String type = SystemInfo.getBoardType()
 								.name();

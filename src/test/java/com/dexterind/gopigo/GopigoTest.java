@@ -1,12 +1,15 @@
 package com.dexterind.gopigo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.EventObject;
 import java.util.Timer;
 
@@ -14,16 +17,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.dexterind.gopigo.behaviours.Motion;
 import com.dexterind.gopigo.components.Board;
+import com.dexterind.gopigo.components.BoardFactory;
+import com.dexterind.gopigo.components.BusFactory;
 import com.dexterind.gopigo.components.Encoders;
 import com.dexterind.gopigo.components.Led;
 import com.dexterind.gopigo.events.StatusEvent;
 import com.dexterind.gopigo.events.VoltageEvent;
 import com.dexterind.gopigo.utils.Statuses;
 import com.dexterind.gopigo.utils.VoltageTaskTimer;
+import com.pi4j.io.i2c.I2CBus;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GopigoTest {
@@ -63,6 +70,15 @@ public class GopigoTest {
 	@Mock
 	private Encoders encoders;
 
+	@Mock
+	private BoardFactory boardFactory;
+
+	@Mock
+	private BusFactory busFactory;
+
+	@Mock
+	private I2CBus bus;
+
 	@Before
 	public void setUp() {
 		sut = new Gopigo();
@@ -74,6 +90,9 @@ public class GopigoTest {
 		sut.setVoltageTimer(voltageTimer);
 		sut.setBoard(board);
 		sut.setEncoders(encoders);
+
+		sut.setBoardFactory(boardFactory);
+		sut.setBusFactory(busFactory);
 	}
 
 	@Test
@@ -128,7 +147,7 @@ public class GopigoTest {
 		verify(voltageTimer).scheduleAtFixedRate(voltageTaskTimer, 0, 60000);
 		verify(listener).onStatusEvent(new StatusEvent(sut, Statuses.INIT));
 	}
-	
+
 	@Test
 	public void testInit_when_halted() throws Exception {
 		sut.halt();
@@ -216,6 +235,26 @@ public class GopigoTest {
 
 		when(board.volt()).thenReturn(7.0);
 		assertThat(sut.isCriticallyLowVoltage(), is(false));
+	}
+
+	@Test
+	public void testPostContruct() throws Exception {
+		when(busFactory.createBus()).thenReturn(bus);
+		when(boardFactory.createBoard(bus)).thenReturn(board);
+		sut.postContruct();
+		assertThat(sut.getMotorLeft(), notNullValue());
+		assertThat(sut.getMotorRight(), notNullValue());
+		assertThat(sut.getEncoders(), notNullValue());
+		assertThat(sut.getMotion(), notNullValue());
+		assertThat(sut.getLedLeft(), notNullValue());
+		assertThat(sut.getLedRight(), notNullValue());
+		assertThat(sut.getBoard(), equalTo(board));
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void testPostContruct_when_error() throws Exception {
+		when(boardFactory.createBoard(Mockito.any(I2CBus.class))).thenThrow(new IOException());
+		sut.postContruct();
 	}
 
 }

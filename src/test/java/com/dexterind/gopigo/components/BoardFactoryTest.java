@@ -1,19 +1,21 @@
 package com.dexterind.gopigo.components;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.Mockito.when;
 
-import java.io.*;
+import java.io.IOException;
 
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
-import org.mockito.runners.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import com.dexterind.gopigo.*;
-import com.pi4j.io.i2c.*;
+import com.dexterind.gopigo.Gopigo;
+import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CDevice;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BoardFactoryTest {
@@ -27,15 +29,17 @@ public class BoardFactoryTest {
 	@Mock
 	private I2CDevice device;
 
+	private BoardFactory sut;
+
 	@Before
 	public void setUp() throws IOException {
-		new BoardFactory();
-		when(bus.getDevice(anyInt())).thenReturn(device);
+		sut = new BoardFactory(gopigo);
+		when(bus.getDevice(Mockito.anyInt())).thenReturn(device);
 	}
 
 	@Test
 	public void testCreateBoard() throws Exception {
-		Board board = BoardFactory.createBoard(bus, gopigo);
+		Board board = sut.createBoard(bus);
 		assertThat(board, notNullValue());
 	}
 

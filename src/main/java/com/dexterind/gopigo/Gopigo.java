@@ -51,7 +51,6 @@ import com.dexterind.gopigo.events.StatusEvent;
 import com.dexterind.gopigo.events.VoltageEvent;
 import com.dexterind.gopigo.utils.Statuses;
 import com.dexterind.gopigo.utils.VoltageTaskTimer;
-import com.pi4j.io.i2c.I2CBus;
 
 /**
  * The main class for the Gopigo. It instanciates all the components and
@@ -127,6 +126,9 @@ public class Gopigo {
 
 	private VoltageTaskTimer voltageTaskTimer;
 
+	private BusFactory busFactory;
+	private BoardFactory boardFactory;
+
 	/**
 	 * Instanciates the components and the behaviours of the Gopigo.
 	 */
@@ -137,14 +139,15 @@ public class Gopigo {
 		voltageTimer = new Timer();
 		voltageTaskTimer = new VoltageTaskTimer(this);
 
+		busFactory = new BusFactory();
+		boardFactory = new BoardFactory(this);
+
 		listeners = new CopyOnWriteArrayList<GopigoListener>();
 	}
 
 	public void postContruct() {
 		try {
-
-			I2CBus bus = BusFactory.createBus();
-			board = BoardFactory.createBoard(bus, this);
+			board = boardFactory.createBoard(busFactory.createBus());
 			encoders = new Encoders(board);
 			ledLeft = new Led(Led.LEFT, board);
 			ledRight = new Led(Led.RIGHT, board);
@@ -152,7 +155,9 @@ public class Gopigo {
 			motorRight = new Motor(Motor.RIGHT, board);
 			motion = new Motion(board);
 		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
+			logger.error("Error instantiating Gopigo {}", e);
+			// TODO is there a better exception here
+			throw new RuntimeException("Error starting gopigo...");
 		}
 	}
 
@@ -387,6 +392,42 @@ public class Gopigo {
 
 	public boolean isCriticallyLowVoltage() throws IOException {
 		return boardVoltage() <= getCriticalVoltage();
+	}
+
+	public void setBusFactory(BusFactory busFactory) {
+		this.busFactory = busFactory;
+	}
+
+	public void setBoardFactory(BoardFactory boardFactory) {
+		this.boardFactory = boardFactory;
+	}
+
+	public Board getBoard() {
+		return board;
+	}
+
+	public Encoders getEncoders() {
+		return encoders;
+	}
+
+	public Led getLedLeft() {
+		return ledLeft;
+	}
+
+	public Led getLedRight() {
+		return ledRight;
+	}
+
+	public Motor getMotorLeft() {
+		return motorLeft;
+	}
+
+	public Motor getMotorRight() {
+		return motorRight;
+	}
+
+	public Motion getMotion() {
+		return motion;
 	}
 
 }
