@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ~/development/gopig;
-java -jar target/gopig-1.0-SNAPSHOT.one-jar.jar;
+java -jar target/gopig-0.1.0.jar;
