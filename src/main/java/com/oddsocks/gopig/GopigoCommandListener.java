@@ -1,19 +1,23 @@
 package com.oddsocks.gopig;
 
-import java.io.IOException;
+import javax.annotation.PostConstruct;
 
-import com.dexterind.gopigo.Gopigo;
-import com.dexterind.gopigo.GopigoListener;
-import com.dexterind.gopigo.events.StatusEvent;
-import com.dexterind.gopigo.events.VoltageEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.oddsocks.dexterind.gopigo.Gopigo;
+import com.oddsocks.dexterind.gopigo.GopigoListener;
+import com.oddsocks.dexterind.gopigo.events.StatusEvent;
+import com.oddsocks.dexterind.gopigo.events.VoltageEvent;
+
+@Service
 public class GopigoCommandListener implements GopigoListener {
 
+	@Autowired
 	private Gopigo gopigo;
 
-	public GopigoCommandListener() throws IOException, InterruptedException {
-		gopigo = new Gopigo();
-		gopigo.postContruct();
+	@PostConstruct
+	public void init() {
 		gopigo.addListener(this);
 		gopigo.setMinVoltage(5.5);
 		gopigo.init();

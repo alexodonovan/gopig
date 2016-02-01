@@ -34,12 +34,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.dexterind.gopigo.Gopigo;
-import com.dexterind.gopigo.GopigoListener;
-import com.dexterind.gopigo.components.Motor;
-import com.dexterind.gopigo.events.StatusEvent;
-import com.dexterind.gopigo.events.VoltageEvent;
-import com.dexterind.gopigo.utils.Statuses;
+import com.oddsocks.dexterind.gopigo.Gopigo;
+import com.oddsocks.dexterind.gopigo.GopigoListener;
+import com.oddsocks.dexterind.gopigo.components.Motor;
+import com.oddsocks.dexterind.gopigo.events.StatusEvent;
+import com.oddsocks.dexterind.gopigo.events.VoltageEvent;
+import com.oddsocks.dexterind.gopigo.utils.Statuses;
 
 public class GopigoCommander implements GopigoListener {
 
