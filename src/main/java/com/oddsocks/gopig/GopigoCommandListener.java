@@ -25,14 +25,14 @@ public class GopigoCommandListener implements GopigoListener {
 
 	@Override
 	public void onStatusEvent(StatusEvent event) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onVoltageEvent(VoltageEvent event) {
-		// TODO Auto-generated method stub
+	}
 
+	public void setGopigo(Gopigo gopigo) {
+		this.gopigo = gopigo;
 	}
 
 }
