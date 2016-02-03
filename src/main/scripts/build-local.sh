@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ~/development/gopig;
+cd ~/development/raspberry_pi/gopig;
 git pull;
-mvn clean install -DskipTests;
-java -jar target/gopig-1.0-SNAPSHOT.one-jar.jar;
+mvn clean install
+mvn spring-boot:run;
