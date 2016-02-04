@@ -30,4 +30,12 @@ public class JacksonJsonMapper implements JsonMapper {
 		return fromJson(new String(bytes), clz);
 	}
 
+	void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
+	void setObjectMapper(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
+
 }

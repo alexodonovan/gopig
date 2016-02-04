@@ -19,6 +19,9 @@ public class CommandBusTest {
 	@Mock
 	private ForwardCommand command;
 
+	@Mock
+	private CommandHandler commandHandler;
+
 	private CommandBus sut;
 
 	@Before
@@ -31,6 +34,12 @@ public class CommandBusTest {
 	public void testPublish() throws Exception {
 		sut.publish(command);
 		verify(bus).post(command);
+	}
+
+	@Test
+	public void testRegister() throws Exception {
+		sut.register(commandHandler);
+		verify(bus).register(commandHandler);
 	}
 
 }

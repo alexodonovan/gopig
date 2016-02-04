@@ -1,4 +1,4 @@
-package com.oddsocks.gopig.mqtt;
+package com.oddsocks.gopig.messaging;
 
 import javax.annotation.PostConstruct;
 
@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.oddsocks.gopig.messaging.Command;
-import com.oddsocks.gopig.messaging.CommandBus;
-import com.oddsocks.gopig.messaging.JsonMapper;
 
 @Service
 public class GopigMqttClient implements MqttCallback {

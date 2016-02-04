@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service;
 import com.google.common.eventbus.Subscribe;
 import com.oddsocks.dexterind.gopigo.Gopigo;
 import com.oddsocks.gopig.messaging.CommandBus;
+import com.oddsocks.gopig.messaging.CommandHandler;
 import com.oddsocks.gopig.messaging.ForwardCommand;
 import com.oddsocks.gopig.messaging.StopCommand;
 
 @Service
-public class MotionCommandHandler {
+public class MotionCommandHandler implements CommandHandler {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
