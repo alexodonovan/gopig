@@ -23,8 +23,9 @@ public class GopigMqttClient implements MqttCallback {
 
 	private static final String COMMANDS_TOPIC = "gopig/commands";
 
-	@Autowired
-	private MqttClient mqttClient;
+	private static final String CLIENT_ID = MqttClient.generateClientId();
+
+	private static final String SERVER_URL = "tcp://192.168.1.10:1883";
 
 	@Autowired
 	private JsonMapper jsonMapper;
@@ -34,7 +35,11 @@ public class GopigMqttClient implements MqttCallback {
 
 	@PostConstruct
 	public void init() throws MqttException {
-		logger.info("Connecting to MQTT broker...");
+		logger.info("Connecting to MqttClient on {}: {}", SERVER_URL, CLIENT_ID);
+		MqttClient mqttClient = new MqttClient(SERVER_URL, CLIENT_ID);
+		mqttClient.setCallback(this);
+		mqttClient.connect();
+		logger.info("Subscribing to MQTT broker topic {}", COMMANDS_TOPIC);
 		mqttClient.subscribe(COMMANDS_TOPIC);
 	}
 
@@ -45,6 +50,7 @@ public class GopigMqttClient implements MqttCallback {
 
 	@Override
 	public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+		logger.info("Received {}: {}", topic, mqttMessage);
 		Command command = jsonMapper.fromJson(mqttMessage.getPayload(), Command.class);
 		logger.info("Topic {}: Payload {}: QoS {}, Retrained {}", topic, command, mqttMessage.getQos(),
 				mqttMessage.isRetained());

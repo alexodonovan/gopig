@@ -18,7 +18,7 @@ import com.google.common.eventbus.SubscriberExceptionHandler;
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultMessageBusTest {
 	
-	private DefaultMessageBus sut;
+	private CommandBus sut;
 	
 	@Mock
 	private EventBus bus;
@@ -28,7 +28,7 @@ public class DefaultMessageBusTest {
 
 	@Before
 	public void init(){
-		sut = new DefaultMessageBus(){};
+		sut = new CommandBus(){};
 		sut.setBus(bus);
 		sut.setExceptionHandler(exceptionHandler);
 	}

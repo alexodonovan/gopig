@@ -1,7 +1,6 @@
 package com.oddsocks.gopig.messaging;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,9 +33,4 @@ public class CommandBusTest {
 		verify(bus).post(command);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testPublish_only_accepts_commands() throws Exception {
-		sut.publish("");
-		verifyZeroInteractions(bus);
-	}
 }
