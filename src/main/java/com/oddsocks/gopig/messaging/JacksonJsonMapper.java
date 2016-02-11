@@ -21,7 +21,7 @@ public class JacksonJsonMapper implements JsonMapper {
 			return objectMapper.readValue(json, type);
 		} catch (IOException e) {
 			logger.error("Error parsing json string {}", json);
-			throw new RuntimeException(e);
+			throw new JacksonSerializationException("Jackson Serialization Error", e);
 		}
 	}
 
@@ -30,11 +30,11 @@ public class JacksonJsonMapper implements JsonMapper {
 		return fromJson(new String(bytes), clz);
 	}
 
-	void setLogger(Logger logger) {
+	protected void setLogger(Logger logger) {
 		this.logger = logger;
 	}
 
-	void setObjectMapper(ObjectMapper objectMapper) {
+	protected void setObjectMapper(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 	}
 
