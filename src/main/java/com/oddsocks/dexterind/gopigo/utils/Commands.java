@@ -197,6 +197,4 @@ public class Commands {
 	 */
 	public static final int UNUSED = 0;
 
-	public Commands() {
-	}
 }
