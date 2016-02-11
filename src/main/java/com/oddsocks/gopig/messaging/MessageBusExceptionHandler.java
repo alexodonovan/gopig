@@ -17,7 +17,7 @@ public class MessageBusExceptionHandler implements SubscriberExceptionHandler {
 		logger.error("Error in subscriber {}: {}: {}: {}", th, context.getSubscriber(), context.getSubscriberMethod(), context.getEvent());
 	}
 
-	void setLogger(Logger logger) {
+	protected void setLogger(Logger logger) {
 		this.logger = logger;
 	}
 
