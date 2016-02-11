@@ -255,7 +255,7 @@ public class Gopigo {
 	 * @return True if operative, False if not.
 	 */
 	public Boolean isOperative() {
-		return isHalt == false;
+		return !isHalt;
 	}
 
 	/**
