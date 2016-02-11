@@ -7,7 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
 import com.oddsocks.dexterind.gopigo.Gopigo;
 import com.oddsocks.dexterind.gopigo.events.StatusEvent;
@@ -26,11 +28,15 @@ public class GopigoCommandListenerTest {
 
 	@Mock
 	private StatusEvent statusEvent;
+	
+	@Mock 
+	private Logger logger;
 
 	@Before
 	public void setUp() {
 		sut = new GopigoCommandListener();
 		sut.setGopigo(gopigo);
+		sut.setLogger(logger);
 	}
 
 	@Test
@@ -45,12 +51,14 @@ public class GopigoCommandListenerTest {
 	public void testOnStatusEvent() throws Exception {
 		sut.onStatusEvent(statusEvent);
 		verifyZeroInteractions(gopigo);
+		verify(logger).info(Mockito.anyString(), Mockito.eq(statusEvent));
 	}
 
 	@Test
 	public void testOnVoltageEvent() throws Exception {
 		sut.onVoltageEvent(volatgeEvent);
 		verifyZeroInteractions(gopigo);
+		verify(logger).info(Mockito.anyString(), Mockito.eq(volatgeEvent));
 	}
 
 }
