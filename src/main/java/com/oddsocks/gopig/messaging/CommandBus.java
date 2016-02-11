@@ -34,15 +34,15 @@ public class CommandBus implements MessageBus {
 		bus.register(handler);
 	}
 
-	EventBus getBus() {
+	protected EventBus getBus() {
 		return bus;
 	}
 
-	void setBus(EventBus bus) {
+	protected void setBus(EventBus bus) {
 		this.bus = bus;
 	}
 
-	void setExceptionHandler(SubscriberExceptionHandler exceptionHandler) {
+	protected void setExceptionHandler(SubscriberExceptionHandler exceptionHandler) {
 		this.exceptionHandler = exceptionHandler;
 	}
 
