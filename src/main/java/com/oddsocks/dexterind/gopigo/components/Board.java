@@ -95,7 +95,7 @@ public class Board {
 		checkHalt();
 		// Convert array: int[] to byte[]
 		final ByteBuffer byteBuffer = ByteBuffer.allocate(bytes.length);
-		for (int i = 0, len = bytes.length; i < len; i++) {
+		for (int i = 0; i < bytes.length; i++) {
 			byteBuffer.put((byte) bytes[i]);
 		}
 		sleep(100); // TODO: Is correct to have this here or we let the external
