@@ -149,7 +149,7 @@ public class Gopigo {
 		} catch (IOException | InterruptedException e) {
 			logger.error("Error instantiating Gopigo {}", e);
 			// TODO is there a better exception here
-			throw new RuntimeException("Error starting gopigo...");
+			throw new StartupException("Error starting gopigo...", e);
 		}
 	}
 
