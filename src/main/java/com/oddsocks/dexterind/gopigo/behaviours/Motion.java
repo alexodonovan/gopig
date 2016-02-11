@@ -215,10 +215,10 @@ public class Motion {
 	 * @throws IOException
 	 */
 	public int setSpeed(int speed) throws IOException {
-		speed = trimSpeed(speed);
+		int trimmed = trimSpeed(speed);
 
-		setLeftSpeed(speed);
-		setRightSpeed(speed);
+		setLeftSpeed(trimmed);
+		setRightSpeed(trimmed);
 
 		return Statuses.OK;
 	}
