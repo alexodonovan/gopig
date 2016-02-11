@@ -31,22 +31,21 @@
 package com.oddsocks.dexterind.gopigo.utils;
 
 public class Statuses {
-  /**
-   * The OK status. This is returned by all the I2C methods.
-   */
-  public static final int OK = 1;
-  /**
-   * The ERROR status. This is returned by the I2C methods in case of issues.
-   */
-  public static final int ERROR = -1;
-  /**
-   * The INIT status.
-   */
-  public static final int INIT = 2;
-  /**
-   * The HALT status.
-   */
-  public static final int HALT = 3;
+	/**
+	 * The OK status. This is returned by all the I2C methods.
+	 */
+	public static final int OK = 1;
+	/**
+	 * The ERROR status. This is returned by the I2C methods in case of issues.
+	 */
+	public static final int ERROR = -1;
+	/**
+	 * The INIT status.
+	 */
+	public static final int INIT = 2;
+	/**
+	 * The HALT status.
+	 */
+	public static final int HALT = 3;
 
-  public Statuses(){}
 }
