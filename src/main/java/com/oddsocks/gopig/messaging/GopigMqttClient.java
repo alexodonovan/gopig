@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class GopigMqttClient implements MqttCallback {
 
@@ -58,6 +57,14 @@ public class GopigMqttClient implements MqttCallback {
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
 		logger.info("Delivery complete: {}", token);
+	}
+
+	public void setJsonMapper(JsonMapper jsonMapper) {
+		this.jsonMapper = jsonMapper;
+	}
+
+	public void setCommandBus(CommandBus commandBus) {
+		this.commandBus = commandBus;
 	}
 
 }
